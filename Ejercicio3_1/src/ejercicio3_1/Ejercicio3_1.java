@@ -55,7 +55,7 @@ public class Ejercicio3_1 {
                 //validación de datos
                 if(horas<0)
                     throw new HoraInvalidaException();
-                error= false;
+                error = false;
             }
             catch (HoraInvalidaException|NumberFormatException e)
             {
@@ -77,6 +77,8 @@ public class Ejercicio3_1 {
                 estadoCivil=JOptionPane.showInputDialog("Tecle estado civil del trabajador: "
                     + "El estado civil puede ser S de soltero, C de casado, V de viudo y D de" +
                     " divorciado (S C V D ).").charAt(0);
+                //obligar a que el dato de entrada char esté en mayúsculas
+                estadoCivil=Character.toUpperCase(estadoCivil);
                 if(estadoCivil!='S'&&estadoCivil!='C'&&estadoCivil!='V'&&estadoCivil!='D')
                     throw new EstadoCivilInvalidoException();
                 error=false;
@@ -96,6 +98,8 @@ public class Ejercicio3_1 {
                 nivelEstudios=JOptionPane.showInputDialog("Tecle el nivel de estudios del trabajador:" 
                     + "El nivel de estudios puede ser P de primario," + " M de medio y " 
                     + "S de superior (P M S).").charAt(0);
+                //obligar a que el dato de entrada char esté en mayúsculas
+                nivelEstudios=Character.toUpperCase(nivelEstudios);
                 if(nivelEstudios=='P'||nivelEstudios=='M'||nivelEstudios=='S')
                     error=false;
                 else throw new NivelEstudiosInvalidoException();
@@ -112,20 +116,33 @@ public class Ejercicio3_1 {
         //constantes a usar en el cálculo:
         final float COSTO_HORA_NORMAL = 10;
         final float COSTO_HORA_EXTRA = 15;
-        final float PLUS = 100;
+        final float PLUS = 100;//necesaria una f?
+        final byte CUARENTA = 40;
         //variable de esta función que se devolverá a main:
         float sueldo;
         //SUELDO BASE
         //horas normales
-        if(horas<=40)
+        if(horas<=CUARENTA)
             sueldo = horas * COSTO_HORA_NORMAL;
         //horas extras
         else
-            sueldo = (horas - 40) * COSTO_HORA_EXTRA;
+            //sueldo = (horas - CUARENTA) * COSTO_HORA_EXTRA; esto está mal: no estaría contando las primeras 40 horas.
+            sueldo = (horas-CUARENTA)* COSTO_HORA_EXTRA + CUARENTA * COSTO_HORA_NORMAL;
         //PLUS
-        if(nivelEstudios=='S'||(estadoCivil=='V'&&nivelEstudios=='P'))
-            sueldo = sueldo + PLUS;
+        if(estadoCivil=='S'||nivelEstudios=='S'||(estadoCivil=='V'&&nivelEstudios=='P'))
+            sueldo = sueldo + PLUS;//sueldo+=PLUS; es lo mismo
         return sueldo;
-    }
+        /*sería lo mismo dividirlo en 3 condiciones de la sgte forma:
+        if(estadoCivil=='S')
+            sueldo+=PLUS;
+        else
+            if(nivelEstudios=='S')
+                sueldo+=PLUS;
+            else 
+                if(estadoCivil=='V'&&nivelEstudios=='P')
+                    sueldo+=PLUS;
+        return sueldo    
+        */   
+    }        
           
 }
